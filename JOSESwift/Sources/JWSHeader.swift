@@ -223,6 +223,15 @@ extension JWSHeader: CommonHeaderParameterSpace {
         }
     }
 
+    public var b64: Bool? {
+        get {
+            return parameters["b64"] as? Bool
+        }
+        set {
+            parameters["b64"] = newValue
+        }
+    }
+
     /// The critical header parameter indicates the header parameter extensions.
     public var crit: [String]? {
         get {
