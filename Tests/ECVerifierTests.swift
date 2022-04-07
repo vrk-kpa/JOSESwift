@@ -40,11 +40,7 @@ class ECVerifierTests: ECCryptoTestCase {
 
         let jws = try! JWS(compactSerialization: serializedJWS)
         let verifier = ECVerifier(algorithm: algorithm, publicKey: keyData.publicKey)
-
-        guard let signingInput = [jws.header, jws.payload].asJOSESigningInput() else {
-            XCTFail()
-            return false
-        }
+        let signingInput = try! JWSSigningInput(header: jws.header, payload: jws.payload).signingInput()
 
         return (try? verifier.verify(signingInput, against: jws.signature)) ?? false
     }

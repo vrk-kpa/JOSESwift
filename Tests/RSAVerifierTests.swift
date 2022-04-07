@@ -35,7 +35,7 @@ class RSAVerifierTests: RSACryptoTestCase {
         super.tearDown()
     }
 
-    func testVerifying() {
+    func testVerifying() throws {
         guard publicKeyAlice2048 != nil else {
             XCTFail()
             return
@@ -43,11 +43,7 @@ class RSAVerifierTests: RSACryptoTestCase {
 
         let jws = try! JWS(compactSerialization: compactSerializedJWSRS512Const)
         let verifier = RSAVerifier(algorithm: .RS512, publicKey: publicKeyAlice2048!)
-
-        guard let signingInput = [jws.header, jws.payload].asJOSESigningInput() else {
-            XCTFail()
-            return
-        }
+        let signingInput = try JWSSigningInput(header: jws.header, payload: jws.payload).signingInput()
 
         XCTAssertTrue(try! verifier.verify(signingInput, against: jws.signature))
     }
